@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">隐秘阅读器</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="header-left">
+      <span class="header-logo">[密]</span>
+      <span id="header-title">隐秘阅读器</span>
+    </div>
+    <div class="header-right">
+      <button id="btn-custom-title" class="header-btn" title="自定义标题">标题</button>
+      <button id="btn-theme" class="header-btn" title="切换主题">暗</button>
+      <span id="status-dot" class="status-dot" title="未就绪"></span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main">
+    <!-- Upload Area (initially visible, collapses after both files uploaded) -->
+    <div id="upload-area">
+      <div class="upload-card">
+        <div class="upload-card-header">选择文件以开始</div>
+        <div class="upload-zones">
+          <!-- File A upload zone -->
+          <div class="upload-zone" id="zone-a">
+            <div class="zone-number">A</div>
+            <div class="zone-label">遮罩文件</div>
+            <div class="zone-desc">显示在表面的文件内容</div>
+            <input type="file" id="file-a" accept=".txt,.md,.pdf,.docx,.epub,.mobi">
+            <label for="file-a" class="zone-btn">选择文件</label>
+            <div class="zone-name" id="zone-a-name"></div>
+          </div>
+
+          <div class="upload-divider">
+            <span class="divider-text">+</span>
+          </div>
+
+          <!-- File B upload zone -->
+          <div class="upload-zone" id="zone-b">
+            <div class="zone-number">B</div>
+            <div class="zone-label">阅读文件</div>
+            <div class="zone-desc">实际需要阅读的文件内容</div>
+            <input type="file" id="file-b" accept=".txt,.md,.pdf,.docx,.epub,.mobi">
+            <label for="file-b" class="zone-btn">选择文件</label>
+            <div class="zone-name" id="zone-b-name"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 备案信息 (仅上传页显示，上传文件后隐藏) -->
+    <div id="beian-bar" class="beian-bar">
+      <div class="beian-pc">
+        <span class="beian-disclaimer">本站内容仅供学习和交流，非商业用途</span>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="beian-icp">浙ICP备2025187466号</a>
+        <a href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33030402001483" target="_blank" rel="noopener noreferrer" class="beian-gongan">
+          <img src="https://www.937788.xyz/gonganbeian.png" alt="公安备案" onerror="this.style.display='none'">
+          浙公网安备33030402001483号
+        </a>
+      </div>
+      <div class="beian-mobile">
+        <span class="beian-disclaimer">本站内容仅供学习和交流，非商业用途</span>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="beian-icp">浙ICP备2025187466号</a>
+        <a href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33030402001483" target="_blank" rel="noopener noreferrer" class="beian-gongan">
+          <img src="https://www.937788.xyz/gonganbeian.png" alt="公安备案" onerror="this.style.display='none'">
+          浙公网安备33030402001483号
+        </a>
+      </div>
+    </div>
+
+    <!-- Reader Area (hidden initially, shown after both files loaded) -->
+    <div id="reader-wrapper" style="display:none;">
+      <div id="reader-container">
+        <div id="layer-b" class="content-layer"></div>
+      </div>
+      <!-- Mask overlay: shows A file content, fades out on scroll -->
+      <div id="layer-a" class="mask-layer"></div>
+    </div>
+
+    <!-- Upload Bar: collapsed by default, expandable -->
+    <div id="upload-bar" class="upload-bar-collapsed" style="display:none;">
+      <div class="bar-toggle" id="bar-toggle" title="展开文件信息">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+      </div>
+      <div class="bar-content" id="bar-content" style="display:none;">
+        <div class="bar-files">
+          <span class="bar-file-label">A</span>
+          <span id="bar-a-name">-</span>
+          <span class="bar-sep">|</span>
+          <span class="bar-file-label">B</span>
+          <span id="bar-b-name">-</span>
+        </div>
+        <button id="btn-expand-upload" class="bar-btn">更换文件</button>
+        <button id="btn-collapse-bar" class="bar-btn bar-btn-close">收起</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Custom Title Dialog -->
+  <div id="dialog-overlay" class="dialog-overlay" style="display:none;"></div>
+  <div id="title-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">自定义标题</div>
+    <div class="dialog-body">
+      <input type="text" id="title-input" class="dialog-input" placeholder="输入自定义标题...">
+      <p class="dialog-hint">标题将显示在页面标题栏和标签页上</p>
+    </div>
+    <div class="dialog-footer">
+      <button id="btn-title-reset" class="dialog-btn dialog-btn-secondary">恢复默认</button>
+      <button id="btn-title-cancel" class="dialog-btn dialog-btn-secondary">取消</button>
+      <button id="btn-title-save" class="dialog-btn dialog-btn-primary">保存</button>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">正在解析文件...</div>
+  </div>
+
+  <!-- CDN Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- Application -->
+  <script src="/main.js"></script>
+</body>
+</html>

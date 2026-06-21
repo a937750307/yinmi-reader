@@ -1,0 +1,14 @@
+{
+  "name": "cipher-reader",
+  "version": "1.0.0",
+  "private": true,
+  "description": "隐秘阅读器",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
