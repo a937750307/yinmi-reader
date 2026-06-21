@@ -2,6 +2,7 @@
   "name": "cipher-reader",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "隐秘阅读器",
   "scripts": {
     "dev": "vite",
